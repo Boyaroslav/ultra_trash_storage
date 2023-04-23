@@ -1,0 +1,62 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<div class="notaccountblock">
+    <a href="/" class="button">на главную</a> <br>
+    <a href="/our_dear_users" class="button">а давай карочи на всех посмотрим</a>
+</div>
+<div class="text1">
+{%if img == None%}
+<img src="/static/img/default.png">
+{%else%}
+<img src="/show_image/{{user.id}}">
+{% endif %}
+{%if current_user.admin == 1 %}
+<div class="adminfeatures">
+
+  <a href="/administrate/can_joke/{{user.id}}">Изменить возможность шутить. Сейчас она у него {{user.can_joke}}</a> <br>
+  <a href="/administrate/can_music/{{user.id}}">Изменить возможность музыцировать. Сейчас она у него {{user.can_music}}</a> <br>
+  <a href="/administrate/can_server/{{user.id}}">Изменить возможность серверить. Сейчас она у него {{user.can_server}}</a> <br>
+  <a href="/administrate/make_admin/{{user.id}}">Назначить админом(не думаю, что это необходимо)</a> <br>
+  <a href="/administrate/delete_account._./{{user.id}}">Удалить аккаунт если он не админ</a>
+
+</div>
+{%endif%}
+<div class="links">
+{%if user.git_ != '' %}
+<a href="{{user.git_}}"><img src="/show_svgs/3"></img></a>
+{%endif%}
+{%if user.social_ != '' %}
+<a href="{{user.social_}}"><img src="/show_svgs/2"></img></a>
+{%endif%}
+{%if user.telegram_ != ''%}
+<a href="{{user.telegram_}}"><img src="/show_svgs/1"></img></a>
+{%endif%}
+{%if user.admin == 1 %}
+<img src="/show_svgs/5">
+{%endif%}
+{%for l in extra_links%}
+<a href="{{l.link}}"><img src="/show_svgs/{{l.image}}"></img></a>
+{%endfor%}
+</div>
+{%if user.id == current_user.id%}
+<dev class="menu"><p><a href="/upload_photo" class="button">сменить аватарку</a></p></dev>
+<dev class="menu"><p><a href="/change_about" class="button">изменить описание</a></p></dev>
+<dev class="menu"><p><a href="/add_link" class="button">добавить новую ссылку</a></p></dev>
+<dev class="menu"><p><a href="/administrate/delete_account._./{{user.id}}" class="button">удалить свой аккаунт</a></p></dev>
+{%endif%}
+
+<h1>Встречайте самого главного пользователья, {{user.name}}</h1>
+<p>с нами уже {{dated}} дней, {{dateh}} часов и {{datem}} минутки</p>
+<p>{{user.about}}</p>
+</div>
+<div class="text1">
+    <h3>Пошучено шуточек: </h3>
+    <h1><a href="/jokes/{{user.name}}">{{user.jokes_count}}</a></h1>
+    <br>
+    <h3>Выложено музычек: </h3>
+    <h1><a href="/music/{{user.name}}">{{user.music_count}}</a></h1>
+    <br>
+    <h3>Выложено серверов: </h3>
+    <h1><a href="/servers/{{user.name}}">{{user.servers_count}}</a></h1>
+</div>

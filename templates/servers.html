@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+    {% block content %}
+    <div class="notaccountblock">
+        <a href="/" class="button">на главную</a>
+    </div>
+    {% if current_user.is_authenticated %}
+        {%if current_user.can_server == 1%}
+        <div class="accountblock">
+            <a href="/servers/add_server" class="button">добавить сервер</a>
+        </div>
+        {%endif%}
+    {%endif%}
+    <div class="text1">
+        <h1>Внимание: серверы</h1>
+    </div>
+    {% for j in servers %}
+        <div class="joke">
+            <p>Хостит: <a href="/our_dear_users/{{j.user_id}}">{{j.user_name}}</a></p>
+            <p>{{j.game}}</p>
+            <p>{{j.title}}</p>
+            <p>{{j.protocol}}</p>
+            <p>{{j.ip}}</p>
+            {%if current_user.admin == 1%}
+            <a href="/servers/delete/{{j.id}}"><p>Удалить запись (ты админ)</p></a>
+            {%endif%}
+        </div>
+    {% endfor %}
+
+    {%if page > 0 %}
+    <p><a href="/servers{{by_id}}?page={{page - 1}}" class="button">назад</a></p>
+    {%endif%}
+    {%if page < page_count - 1 %}
+
+    <p><a href="/servers{{by_id}}?page={{page + 1}}" class="button">далее</a></p>
+    {%endif%}
+
+
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+{% block content %}
+    <h1>Добавление ссылки</h1>
+   
+    <form action="" method="post">
+
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.link.label }}<br>
+            {{ form.link}}<br>
+
+        </p>
+        <br>
+        {%for r in form.images%}
+            {{r}}
+            <img src="/show_svgs/{{loop.index0}}">
+            
+        {%endfor%}
+        {{form.submit}}
+
+    </form>
+    <p>Логин необходим для работы на сайте</p>
+{% endblock %}

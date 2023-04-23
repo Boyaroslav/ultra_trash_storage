@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+    {% block content %}
+        
+
+        <div class="notaccountblock">
+            <a href="/servers" class="button">назад</a> <br>
+            <a href="/" class="button">на главную</a>
+        </div>
+        <div class="text1">
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>{{form.game.label}}</p> <br>
+                {{form.game}}
+                <br>
+                <p>{{form.title.label}}</p>
+                <br>
+                {{form.title}}
+                <br>
+                <p>{{form.protocol.label}}</p>
+                <br>
+                {{form.protocol}}
+                <br>
+                <p>{{form.ip.label}}</p>
+                <br>
+                {{form.ip}}
+                <br>
+                <p>{{form.submit}}</p>
+
+
+            </form>
+        </div>
+
+
+
+    {% endblock %}
+</body>
+</html>

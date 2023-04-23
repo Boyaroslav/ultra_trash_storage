@@ -1,0 +1,343 @@
+body {
+	background: linear-gradient(-45deg, #290f25, #530724, #6b2040, #300b27);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+  background-image: "images/wallpaper.jpg";
+  font-family: monospace;
+
+}
+
+.f{
+    border: 1px  rgb(53, 53, 53);
+
+    padding: 10px;
+    font-size: 50px;
+    position: fixed;
+    left: 20px;
+
+    width: 400px;
+
+
+
+}
+
+.header1{
+    white-space: pre-wrap;
+    border: 4px double black;
+    background: rgb(58, 51, 55); /* Цвет фона */
+    padding: 10px;
+    position: center;
+    border: 4px double black;
+
+    display: flex;
+    align-content: center;
+    align-items: center;
+    left: 20px;
+
+    width: 50%;
+    margin: 0 auto;
+    left: 400px;
+
+    width: 500px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.downl {
+  display: flex;
+  left: 400px;
+  border-radius: 4px;
+  text-align: center;
+
+
+  white-space: normal; 
+  background: orangered;
+  font-size: 30px;
+}
+
+.down2 {
+  display: flex;
+  left: 400px;
+  border-radius: 4px;
+  align-content: center;
+  text-align: center;
+  background: rgb(68, 116, 187);
+  font-size: 30px;
+}
+
+
+form {
+  padding: 3em;
+  height: 600px;
+  border-radius: 20px;
+
+  backdrop-filter: blur(10px);
+  box-shadow: 20px 20px 40px -6px rgba(0,0,0,0.2);
+  
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  font-size: 30px;
+}
+
+.accountblock{
+  border: 4px double black;
+  background: rgb(66, 58, 63); /* Цвет фона */
+  padding: 10px;
+  position: sticky;
+
+  top: 0px;
+  font-size: 30px;
+  white-space: normal; 
+
+}
+.notaccountblock{
+  border: 4px double black;
+  background: rgb(66, 58, 63); /* Цвет фона */
+  padding: 10px;
+  position: sticky;
+
+  top: 0px;
+  font-size: 30px;
+  white-space: normal; 
+
+}
+
+.music {
+  border: 4px double black;
+  background: rgb(66, 58, 63); /* Цвет фона */
+  padding: 10px;
+  position: center;
+  border: 4px double black;
+
+
+  align-items: center;
+  left: 20px;
+
+  margin: 0 auto;
+  left: 400px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.adminfeatures {
+  font-size: 20px;
+  background-color: #300b27;
+  float: right;
+  font-size: 30px;
+}
+
+.links {
+  
+  font-size: 30px;
+}
+
+
+.constil p{
+  display:inline;
+}
+
+.menu {
+  border: 4px double black;
+  background: rgb(39, 34, 37); 
+  float: right;
+}
+
+
+.text1{
+
+    border: 4px double black;
+    background: rgb(66, 58, 63); /* Цвет фона */
+    padding: 10px;
+    position: center;
+    border: 4px double black;
+
+
+    align-items: center;
+    left: 20px;
+
+    margin: 0 auto;
+    left: 400px;
+
+}
+
+.joke{
+
+    border: 4px double black;
+    background: rgb(66, 58, 63); /* Цвет фона */
+    padding: 10px;
+    position: center;
+    border: 4px double black;
+
+
+    align-items: center;
+    left: 20px;
+
+
+    margin: 0 auto;
+    left: 400px;
+    text-align: center;
+
+}
+.accordion-body{
+  background: rgb(66, 58, 63);
+  font-family: monospace;
+  color: #fff;
+}
+.accordion-button{
+  border: 4px double black;
+  background: rgb(66, 58, 63);
+  font-family: monospace;
+  color: #fff;
+}
+.accordion-item{
+  border: 4px double black;
+  background: rgb(66, 58, 63);
+  font-family: monospace;
+  color: #fff;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+  
+  h1 {
+    font-family: monospace;
+    font-size: 30px;
+    color : #ffff;
+    text-align: center;
+
+  }
+  h3{
+    font-family: monospace;
+
+    color : #ffff;
+    text-align: center;
+  }
+    
+  a {
+    color: #fff;
+    font-family: monospace;
+  }
+
+  td {
+    color: #fff;
+    font-family: monospace;
+  }
+
+  table{
+    border: 4px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    
+  }
+
+  th, td {
+    border: 3px solid rgb(95, 95, 95);
+    border-collapse: collapse;
+  }
+
+  th {
+    color: #fff;
+    font-family: monospace;
+  }
+  
+  p {
+    font-family: monospace;
+    font-size: 40px;
+
+    color : #ffff;
+    text-align: center;
+  }
+  li {
+      font-family: monospace;
+      color: #fff;
+  }
+
+  .text1 img {
+      width: 30%;
+      height: auto;
+  }
+  .joke img {
+    width: 50%;
+    height: auto;
+  }
+  input {
+    box-shadow: inset -4px -4px 4px -3px rgba(255, 255, 255, 0.15), inset 4px 4px 4px -2px rgba(0, 0, 0, 0.2);
+    background: transparent;
+    border: none;
+    color: rgb(216, 74, 133);
+    padding: 1em 2em;
+    border-radius: 0.4em;
+}
+textarea{
+  box-shadow: inset -4px -4px 4px -3px rgba(255, 255, 255, 0.15), inset 4px 4px 4px -2px rgba(0, 0, 0, 0.2);
+  background: transparent;
+  border: none;
+  color: rgb(216, 74, 133);
+  padding: 1em 2em;
+  border-radius: 0.4em;
+}
+
+@media (min-width: 1000px){
+
+
+  .music {
+    width: 50%;
+    font-size: 20px;
+  }
+  .accountblock{
+    float: right;
+    font-size: 20px;
+  }
+  p{
+    font-size: 20px;
+  }
+  .notaccountblock{
+    float: left;
+    font-size: 20px;
+  
+  }
+  .text1{
+
+    width: 70%;
+    
+    font-size: 20px;
+
+}
+.joke{
+
+  width: 50%;
+  font-size: 20px;
+
+}
+.links{
+  float: right;
+}
+
+}
+
+@media (max-width: 1000px){
+  .button {
+    display: block;
+    width: 300px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+    font-size: 20px;
+}
+}
