@@ -105,7 +105,10 @@ def upload_photo():
     if imgform.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.id == current_user.id).first()
-        user.image = imgform.image.data.stream.read()
+        try:
+            user.image = imgform.image.data.stream.read()
+        except:
+            pass
         db_sess.commit()
         return redirect('/')   #  {{imgform.submit(type="submit", class="btn btn-primary")}}
 
