@@ -8,17 +8,17 @@
 
     {% block content %}
     <div class="notaccountblock">
-        <a href="/" class="button">на главную</a>
+        <a href="/" class="button">{{translations['на главную'][lang]}}</a>
     </div>
     {% if current_user.is_authenticated %}
         {%if current_user.can_server == 1%}
         <div class="accountblock">
-            <a href="/servers/add_server" class="button">добавить сервер</a>
+            <a href="/servers/add_server" class="button">{{translations['добавитьсервер'][lang]}}</a>
         </div>
         {%endif%}
     {%endif%}
     <div class="text1">
-        <h1>Внимание: серверы</h1>
+        <h1>{{translations['внимание'][lang]}} {{translations['сервера'][lang]}}</h1>
     </div>
     {% for j in servers %}
         <div class="joke">
@@ -34,11 +34,11 @@
     {% endfor %}
 
     {%if page > 0 %}
-    <p><a href="/servers{{by_id}}?page={{page - 1}}" class="button">назад</a></p>
+    <p><a href="/servers{{by_id}}?page={{page - 1}}" class="button">{{translations['назад'][lang]}}</a></p>
     {%endif%}
     {%if page < page_count - 1 %}
 
-    <p><a href="/servers{{by_id}}?page={{page + 1}}" class="button">далее</a></p>
+    <p><a href="/servers{{by_id}}?page={{page + 1}}" class="button">{{translations['вперед'][lang]}}</a></p>
     {%endif%}
 
 

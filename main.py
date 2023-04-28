@@ -13,6 +13,8 @@ from data.servers import Server
 from data.extra_links import Link
 from svgs import link_images, image_choices
 
+from languages import translations
+
 db_session.global_init("db/blogs.db")
 
 defaultimg = open("static/img/default.png", 'rb').read()
@@ -53,12 +55,29 @@ def logout():
 
 n = 0
 
+@app.route('/change_language/<string:lang>')
+def change_language(lang):
+    if lang in ['ru', 'en', 'sp']:
+        i = ['ru', 'en', 'sp'].index(lang)
+        page = request.args.get('page', default='/')
+        res = make_response(redirect(page))
+        res.set_cookie('language', lang)
+        return res
+
+
 
 @app.route('/')
 @app.route('/main')
 def draw_():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
+    res = make_response(render_template('main.html', translations=translations, lang=i))
+
+    print(translations['юморюськи'][i])
+    if not language:
+        res.set_cookie("language", 'ru')
     db_sess = db_session.create_session()
-    return render_template('main.html')
+    return res
 
 @app.route('/jokes/add_joke', methods=['GET', 'POST'])
 @login_required
@@ -180,6 +199,8 @@ def show_joke_image(id):
 @app.route('/jokes')
 def draw_jokes():
     page = request.args.get('page', default=0, type=int)
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     db_sess = db_session.create_session()
     jokes = db_sess.query(Joke).all()
     jokes_count = db_sess.query(Joke).count()
@@ -189,10 +210,12 @@ def draw_jokes():
         end = 0
 
     jokes = db_sess.query(Joke).slice(end,start)
-    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id='')
+    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id='', translations=translations, lang=i)
 
 @app.route('/jokes/<string:name>')
 def draw_personal_jokes(name):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     jokes = db_sess.query(Joke).filter(Joke.user_name == name).all()
@@ -202,10 +225,12 @@ def draw_personal_jokes(name):
     if end > jokes_count:
         end = jokes_count
     jokes = db_sess.query(Joke).filter(Joke.user_name == name).slice(end, start)
-    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id=f"/{id}", one_joke=name)
+    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id=f"/{id}", one_joke=name, translations=translations, lang=i)
 
 @app.route('/jokes/<int:id>')
 def draw_joke(id):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     jokes = db_sess.query(Joke).filter(Joke.id == id).all()
@@ -215,20 +240,24 @@ def draw_joke(id):
     if end > jokes_count:
         end = jokes_count
     jokes = db_sess.query(Joke).filter(Joke.id == id).slice(end, start)
-    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id=f"/{id}", one_joke=id)
+    return render_template('jokes.html', jokes=jokes[::-1], page=page, page_count=jokes_count // JOKES_ON_PAGE + 1, by_id=f"/{id}", one_joke=id, translations=translations, lang=i)
 
 @app.route('/our_dear_users/<int:id>')
 def draw_user(id=-1):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     user = load_user(id)
     db_sess = db_session.create_session()
     extra_links = db_sess.query(Link).filter(Link.user_id == id).all()
     now = datetime.datetime.now()
     d, h, m = days_hours_minutes(now - user.created_date)
 
-    return render_template('user_page.html', user=user, dated=d, dateh=h, datem=m, extra_links=extra_links, link_images=link_images)
+    return render_template('user_page.html', user=user, dated=d, dateh=h, datem=m, extra_links=extra_links, link_images=link_images, translations=translations, lang=i)
 
 @app.route('/our_dear_users/our_dear_admins')
 def draw_admins():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.admin == 1).all()
@@ -238,24 +267,26 @@ def draw_admins():
     if end < 0:
         end = 0
     users = db_sess.query(User).filter(User.admin == 1).slice(end,start)
-    return render_template('doska_pocheta.html', blocks=users[::-1], page=page, admins='/our_dear_admins', page_count = users_count // USERS_ON_PAGE + 1)
+    return render_template('doska_pocheta.html', blocks=users[::-1], page=page, admins='/our_dear_admins', page_count = users_count // USERS_ON_PAGE + 1, translations=translations, lang=i)
 
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = RegisterForm()
     imgform = ImgUploadForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Пароли не совпадают")
+                                   message="Пароли не совпадают", translations=translations, lang=i)
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
-                                   message="Такой пользователь уже есть")
+                                   message="Такой пользователь уже есть", translations=translations, lang=i)
         user = User(
             name=form.name.data,
             email=form.email.data,
@@ -270,11 +301,13 @@ def reqister():
         db_sess.commit()
         login_user(user, False)
         return redirect('/upload_photo')
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('register.html', title='Регистрация', form=form, translations=translations, lang=i)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -284,11 +317,13 @@ def login():
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
-                               form=form)
-    return render_template('login.html', title='Авторизация', form=form)
+                               form=form, translations=translations, lang=i)
+    return render_template('login.html', title='Авторизация', form=form, translations=translations, lang=i)
 
 @app.route('/music')
 def draw_music():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     music = db_sess.query(Music).all()
@@ -299,11 +334,13 @@ def draw_music():
         end = 0
 
     jokes = db_sess.query(Music).slice(end,start)
-    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='')
+    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='', translations=translations, lang=i)
 
 
 @app.route('/music/<string:name>')
 def draw_music_byname(name):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     music = db_sess.query(Music).filter(Music.user_name == name).all()
@@ -314,10 +351,12 @@ def draw_music_byname(name):
         end = 0
 
     jokes = db_sess.query(Music).slice(end,start)
-    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='f/{id}')
+    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='f/{id}', translations=translations, lang=i)
 
 @app.route('/music/<int:id>')
 def draw_music_byid(id):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     music = db_sess.query(Music).filter(Music.id == id).all()
@@ -328,12 +367,14 @@ def draw_music_byid(id):
         end = 0
 
     jokes = db_sess.query(Music).slice(end,start)
-    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='f/{id}')
+    return render_template('music.html', music=music[::-1], page=page, page_count=music_count // JOKES_ON_PAGE + 1, by_id='f/{id}', translations=translations, lang=i)
 
 
 @app.route('/music/add_music', methods=['GET', 'POST'])
 @login_required
 def add_music():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = AddMusicContext()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -350,11 +391,13 @@ def add_music():
         db_sess.add(music)
         db_sess.commit()
         return redirect(f'/music/add_music/add_file/{music.id}')
-    return render_template('add_music.html', form=form)
+    return render_template('add_music.html', form=form, translations=translations, lang=i)
 
 @app.route('/music/add_music/add_file/<int:id>', methods=['GET', 'POST'])
 @login_required
 def add_music_file(id):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     musicform = MusicUploadForm()
     if musicform.validate_on_submit():
         db_sess = db_session.create_session()
@@ -366,7 +409,7 @@ def add_music_file(id):
         db_sess.commit()
         return redirect('/music')   #  {{imgform.submit(type="submit", class="btn btn-primary")}}
 
-    return render_template('upload_music.html', musicform=musicform)
+    return render_template('upload_music.html', musicform=musicform, translations=translations, lang=i)
 
 
 
@@ -489,6 +532,8 @@ def adm_delete_account(id):
 
 @app.route('/servers')
 def draw_servers():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     servers = db_sess.query(Server).all()
@@ -499,10 +544,12 @@ def draw_servers():
         end = 0
 
     servers = db_sess.query(Server).slice(end,start)
-    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='')
+    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='', translations=translations, lang=i)
 
 @app.route('/servers/<string:name>')
 def draw_servers_byname(name):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     servers = db_sess.query(Server).filter(Server.user_name == name).all()
@@ -513,10 +560,12 @@ def draw_servers_byname(name):
         end = 0
 
     jokes = db_sess.query(Music).slice(end,start)
-    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='f/{id}')
+    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='f/{id}', translations=translations, lang=i)
 
 @app.route('/servers/<int:id>')
 def draw_servers_byid(id):
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
     servers = db_sess.query(Server).filter(Server.id == id).all()
@@ -527,12 +576,14 @@ def draw_servers_byid(id):
         end = 0
 
     jokes = db_sess.query(Music).slice(end,start)
-    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='f/{id}')
+    return render_template('servers.html', servers=servers[::-1], page=page, page_count=servers_count // JOKES_ON_PAGE + 1, by_id='f/{id}', translations=translations, lang=i)
 
 
 @app.route('/servers/add_server', methods=['GET', 'POST'])
 @login_required
 def add_server():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = AddServerForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -551,11 +602,13 @@ def add_server():
         db_sess.add(server)
         db_sess.commit()
         return redirect('/servers')
-    return render_template('add_server.html', form=form)
+    return render_template('add_server.html', form=form, translations=translations, lang=i)
 
 
 @app.route('/goyda_lent')
 def goyda():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     posts = []
     db_sess = db_session.create_session()
     #  jokes
@@ -577,12 +630,14 @@ def goyda():
 
     posts = sorted(posts, key=lambda j: j.created_date)
 
-    return render_template('goyda.html', posts=posts[::-1])
+    return render_template('goyda.html', posts=posts[::-1], translations=translations, lang=i)
 
 
 @app.route('/change_about', methods=['GET', 'POST'])
 @login_required
 def change_about():
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = ChangeAboutForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -590,13 +645,14 @@ def change_about():
         user.about = form.about.data
         db_sess.commit()
         return redirect(f'/our_dear_users/{current_user.id}')
-    return render_template('change_about.html', form=form, exception=f'/our_dear_users/{current_user.id}')
+    return render_template('change_about.html', form=form, exception=f'/our_dear_users/{current_user.id}', translations=translations, lang=i)
 
 
 @app.route('/add_link', methods=['GET', 'POST'])
 @login_required
 def add_extra_link():
-
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
     form = AddLinkForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -610,13 +666,15 @@ def add_extra_link():
 
         db_sess.add(link)
         db_sess.commit()
-        return redirect(f'/our_dear_users/{current_user.id}')
+        return redirect(f'/our_dear_users/{current_user.id}', translations=translations, lang=i)
 
-    return render_template('add_link.html', form=form)
+    return render_template('add_link.html', form=form, translations=translations, lang=i)
 
 @app.route('/docs/why_registration')
 def why_registration():
-    return render_template('why_registration.html')
+    language = request.cookies.get("language", 0)
+    i = ['ru', 'en', 'sp'].index(language)
+    return render_template('why_registration.html', translations=translations, lang=i)
 
 
 if __name__ == '__main__':

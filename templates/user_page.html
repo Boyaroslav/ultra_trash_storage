@@ -2,8 +2,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <div class="notaccountblock">
-    <a href="/" class="button">на главную</a> <br>
-    <a href="/our_dear_users" class="button">а давай карочи на всех посмотрим</a>
+    <a href="/" class="button">{{translations['на главную'][lang]}}</a> <br>
+    <a href="/our_dear_users" class="button">{{translations['на всех'][lang]}}</a>
 </div>
 <div class="text1">
 {%if img == None%}
@@ -40,23 +40,23 @@
 {%endfor%}
 </div>
 {%if user.id == current_user.id%}
-<dev class="menu"><p><a href="/upload_photo" class="button">сменить аватарку</a></p></dev>
-<dev class="menu"><p><a href="/change_about" class="button">изменить описание</a></p></dev>
-<dev class="menu"><p><a href="/add_link" class="button">добавить новую ссылку</a></p></dev>
-<dev class="menu"><p><a href="/administrate/delete_account._./{{user.id}}" class="button">удалить свой аккаунт</a></p></dev>
+<dev class="menu"><p><a href="/upload_photo" class="button">{{translations['смав'][lang]}}</a></p></dev>
+<dev class="menu"><p><a href="/change_about" class="button">{{translations['смоп'][lang]}}</a></p></dev>
+<dev class="menu"><p><a href="/add_link" class="button">{{translations['допсс'][lang]}}</a></p></dev>
+<dev class="menu"><p><a href="/administrate/delete_account._./{{user.id}}" class="button">{{translations['удакк'][lang]}}</a></p></dev>
 {%endif%}
 
-<h1>Встречайте самого главного пользователья, {{user.name}}</h1>
-<p>с нами уже {{dated}} дней, {{dateh}} часов и {{datem}} минутки</p>
+<h1>{{translations['встречайте'][lang]}}{{user.name}}</h1>
+<p>{{translations['снами'][lang]}}{{dated}} {{translations['дней'][lang]}}, {{dateh}} {{translations['часов и'][lang]}} {{datem}} {{translations['минутки'][lang]}}</p>
 <p>{{user.about}}</p>
 </div>
 <div class="text1">
-    <h3>Пошучено шуточек: </h3>
+    <h3>{{translations['пошут'][lang]}}</h3>
     <h1><a href="/jokes/{{user.name}}">{{user.jokes_count}}</a></h1>
     <br>
-    <h3>Выложено музычек: </h3>
+    <h3>{{translations['помуз'][lang]}}</h3>
     <h1><a href="/music/{{user.name}}">{{user.music_count}}</a></h1>
     <br>
-    <h3>Выложено серверов: </h3>
+    <h3>{{translations['посер'][lang]}}</h3>
     <h1><a href="/servers/{{user.name}}">{{user.servers_count}}</a></h1>
 </div>

@@ -7,28 +7,28 @@ from flask_login import LoginManager
 import svgs
 
 class LoginForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить меня')
-    submit = SubmitField('Войти')
+    email = EmailField('Email', validators=[DataRequired()])
+    password = PasswordField('Passowrd', validators=[DataRequired()])
+    remember_me = BooleanField('Remember me')
+    submit = SubmitField('Done')
 
 
 class RegisterForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
-    name = StringField('Имя пользователя', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_again = PasswordField('Retry password', validators=[DataRequired()])
+    name = StringField('username', validators=[DataRequired()])
     
     telegram = StringField('Ваш аккаунт в социальной сети по типу telegram')
     github = StringField('Ваш аккаунт на хостинге основанном на системе Git (ссылка)')
     social = StringField('Ваш аккаунт в социальной сети (ссылка)')
 
-    about = TextAreaField("Немного о себе")
-    submit = SubmitField('Войти')
+    about = TextAreaField("About")
+    submit = SubmitField('Done')
 
 class ImgUploadForm(FlaskForm):
-    image = FileField('выберите аватарку')
-    submit = SubmitField('Готово')
+    image = FileField('choose avatar')
+    submit = SubmitField('Done')
 
 class AddJokeForm(FlaskForm):
     about = StringField('о чём ваш анекдот? (пример - +2-2, вовочка, джин, затрудняюсь ответить)', validators=[DataRequired()])
