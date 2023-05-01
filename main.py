@@ -688,12 +688,11 @@ def get_reps():
         yield i.name
 
 
-@app.route('/gitreps/<string:name>', methods=['GET', 'POST'])
+@app.route('/gitreps/<path:name>', methods=['GET', 'POST'])
 def gitreps(name):
-    print(f'{storagepath}\\{name}\\.git')
-
-    return f"""<a href={url_for(f'/gitreps/{name}')}>/gitreps/{name}</a>"""
-
+    print(name)
+    r = make_response(open(f'/storage/{name}'))
+    return r
 @app.route('/gitreps/<string:rep>/<string:file>')
 def retfile(rep, file):
     return send_from_directory(Path(storagepath + '\\' + rep), file)
