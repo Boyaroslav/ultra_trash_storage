@@ -4,6 +4,7 @@ from forms import *
 import json
 import datetime
 import dateutil
+import os
 from data import db_session
 from data import __all_models
 from data.users import User
@@ -12,12 +13,15 @@ from data.music import Music
 from data.servers import Server
 from data.extra_links import Link
 from svgs import link_images, image_choices
+from pathlib import Path
 
 from languages import translations
 
 db_session.global_init("db/blogs.db")
 
 defaultimg = open("static/img/default.png", 'rb').read()
+storagepath = Path(__file__[:__file__.rfind('\\')] + '\storage')
+print(storagepath)
 
 def days_hours_minutes(td):
     return td.days, td.seconds//3600, (td.seconds//60)%60
@@ -69,7 +73,7 @@ def change_language(lang):
 @app.route('/')
 @app.route('/main')
 def draw_():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     res = make_response(render_template('main.html', translations=translations, lang=i))
 
@@ -199,7 +203,7 @@ def show_joke_image(id):
 @app.route('/jokes')
 def draw_jokes():
     page = request.args.get('page', default=0, type=int)
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     db_sess = db_session.create_session()
     jokes = db_sess.query(Joke).all()
@@ -214,7 +218,7 @@ def draw_jokes():
 
 @app.route('/jokes/<string:name>')
 def draw_personal_jokes(name):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -229,7 +233,7 @@ def draw_personal_jokes(name):
 
 @app.route('/jokes/<int:id>')
 def draw_joke(id):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -244,7 +248,7 @@ def draw_joke(id):
 
 @app.route('/our_dear_users/<int:id>')
 def draw_user(id=-1):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     user = load_user(id)
     db_sess = db_session.create_session()
@@ -256,7 +260,7 @@ def draw_user(id=-1):
 
 @app.route('/our_dear_users/our_dear_admins')
 def draw_admins():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -273,7 +277,7 @@ def draw_admins():
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = RegisterForm()
     imgform = ImgUploadForm()
@@ -306,7 +310,7 @@ def reqister():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = LoginForm()
     if form.validate_on_submit():
@@ -322,7 +326,7 @@ def login():
 
 @app.route('/music')
 def draw_music():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -339,7 +343,7 @@ def draw_music():
 
 @app.route('/music/<string:name>')
 def draw_music_byname(name):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -355,7 +359,7 @@ def draw_music_byname(name):
 
 @app.route('/music/<int:id>')
 def draw_music_byid(id):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -373,7 +377,7 @@ def draw_music_byid(id):
 @app.route('/music/add_music', methods=['GET', 'POST'])
 @login_required
 def add_music():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = AddMusicContext()
     if form.validate_on_submit():
@@ -396,7 +400,7 @@ def add_music():
 @app.route('/music/add_music/add_file/<int:id>', methods=['GET', 'POST'])
 @login_required
 def add_music_file(id):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     musicform = MusicUploadForm()
     if musicform.validate_on_submit():
@@ -532,7 +536,7 @@ def adm_delete_account(id):
 
 @app.route('/servers')
 def draw_servers():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -548,7 +552,7 @@ def draw_servers():
 
 @app.route('/servers/<string:name>')
 def draw_servers_byname(name):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -564,7 +568,7 @@ def draw_servers_byname(name):
 
 @app.route('/servers/<int:id>')
 def draw_servers_byid(id):
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     page = request.args.get('page', default=0, type=int)
     db_sess = db_session.create_session()
@@ -582,7 +586,7 @@ def draw_servers_byid(id):
 @app.route('/servers/add_server', methods=['GET', 'POST'])
 @login_required
 def add_server():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = AddServerForm()
     if form.validate_on_submit():
@@ -607,7 +611,7 @@ def add_server():
 
 @app.route('/goyda_lent')
 def goyda():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     posts = []
     db_sess = db_session.create_session()
@@ -636,7 +640,7 @@ def goyda():
 @app.route('/change_about', methods=['GET', 'POST'])
 @login_required
 def change_about():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = ChangeAboutForm()
     if form.validate_on_submit():
@@ -651,7 +655,7 @@ def change_about():
 @app.route('/add_link', methods=['GET', 'POST'])
 @login_required
 def add_extra_link():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     form = AddLinkForm()
     if form.validate_on_submit():
@@ -669,10 +673,34 @@ def add_extra_link():
         return redirect(f'/our_dear_users/{current_user.id}', translations=translations, lang=i)
 
     return render_template('add_link.html', form=form, translations=translations, lang=i)
+@app.route('/gitreps')
+def draw_reps():
+    language = request.cookies.get("language", 'ru')
+    i = ['ru', 'en', 'sp'].index(language)
+    path = request.args.get('path', default='')
+
+    r = get_reps()
+
+    return render_template('gitreps.html', reps=r, translations=translations, lang=i, path=path, ptype='d')
+
+def get_reps():
+    for i in storagepath.iterdir():
+        yield i.name
+
+
+@app.route('/gitreps/<string:name>', methods=['GET', 'POST'])
+def gitreps(name):
+    print(f'{storagepath}\\{name}\\.git')
+
+    return f"""<a href={url_for(f'/gitreps/{name}')}>/gitreps/{name}</a>"""
+
+@app.route('/gitreps/<string:rep>/<string:file>')
+def retfile(rep, file):
+    return send_from_directory(Path(storagepath + '\\' + rep), file)
 
 @app.route('/docs/why_registration')
 def why_registration():
-    language = request.cookies.get("language", 0)
+    language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     return render_template('why_registration.html', translations=translations, lang=i)
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+    {% block content %}
+    <div class="notaccountblock">
+        <a href="/" class="button">{{translations['на главную'][lang]}}</a>
+        <a href="/gitreps?path={{path[:path.rfind('\\')]}}" class="button">{{translations['вверх'][lang]}}</a>
+    </div>
+    {% if current_user.is_authenticated %}
+
+    {%endif%}
+    {%if ptype == 'd'%}
+    {% for j in reps %}
+        <div class="joke">
+            <a href="/gitreps?path={{path+'\\'+j}}">{{j}}</a>
+        </div>
+    {% endfor %}
+    {%endif%}
+    {%if ptype == 'f'%}
+        <div class="joke">
+            <p>{{reps}}</p>
+        </div>
+    {%endif%}
+
+    {% endblock %}
+</body>
+</html>
