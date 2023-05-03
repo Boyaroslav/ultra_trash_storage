@@ -14,13 +14,20 @@ from data.servers import Server
 from data.extra_links import Link
 from svgs import link_images, image_choices
 from pathlib import Path
+import subprocess
+from flask import Flask, make_response, request, abort
+from io import StringIO, BytesIO
+from dulwich.pack import PackStreamReader
+import subprocess, os.path
+
+from flask_httpauth import HTTPBasicAuth
 
 from languages import translations
 
 db_session.global_init("db/blogs.db")
 
 defaultimg = open("static/img/default.png", 'rb').read()
-storagepath = Path(__file__[:__file__.rfind('\\')] + '\storage')
+storagepath = Path(__file__[:__file__.rfind('/')] + '/storage')
 print(storagepath)
 
 def days_hours_minutes(td):
@@ -76,8 +83,6 @@ def draw_():
     language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     res = make_response(render_template('main.html', translations=translations, lang=i))
-
-    print(translations['юморюськи'][i])
     if not language:
         res.set_cookie("language", 'ru')
     db_sess = db_session.create_session()
@@ -683,19 +688,95 @@ def draw_reps():
 
     return render_template('gitreps.html', reps=r, translations=translations, lang=i, path=path, ptype='d')
 
-def get_reps():
-    for i in storagepath.iterdir():
+def get_reps(name):
+    for i in Path(name).iterdir():
         yield i.name
 
+def gen_get_reps(name):
+    a = []
+    for i in get_reps(name):
+        a.append(i)
+    return a
 
-@app.route('/gitreps/<path:name>', methods=['GET', 'POST'])
-def gitreps(name):
-    print(name)
-    r = make_response(open(f'/storage/{name}'))
-    return r
-@app.route('/gitreps/<string:rep>/<string:file>')
-def retfile(rep, file):
-    return send_from_directory(Path(storagepath + '\\' + rep), file)
+gitauth = HTTPBasicAuth()
+
+git_allowed = {
+    'Boyaroslav': 'boyara867'
+}
+
+@gitauth.get_password
+def get_password(username):
+    if username in git_allowed:
+        return git_allowed[username]
+    return None
+
+@app.route('/gitreps/<string:name>/info/refs')
+@gitauth.login_required
+def inforefs(name):
+    service = request.args.get('service')
+    if service[:4] != 'git-': 
+        abort(500)
+    print(os.path.join('gitreps', name))
+    p = subprocess.Popen([service, '--stateless-rpc', '--advertise-refs', os.path.join('storage', name)], stdout=subprocess.PIPE)
+    packet = '# service=%s\n' % service
+    length = len(packet) + 4
+    _hex = '0123456789abcdef'
+    prefix = ''
+    prefix += _hex[length >> 12 & 0xf]
+    prefix += _hex[length >> 8  & 0xf]
+    prefix += _hex[length >> 4 & 0xf]
+    prefix += _hex[length & 0xf]
+    data = prefix + packet + '0000'
+    data += p.stdout.read().decode()
+    res = make_response(data)
+    res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
+    res.headers['Pragma'] = 'no-cache'
+    res.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate'
+    res.headers['Content-Type'] = 'application/x-%s-advertisement' % service
+    p.wait()
+    return res
+
+
+@app.route('/gitreps/<string:name>/git-receive-pack', methods=['POST'])
+@gitauth.login_required
+def git_receive(name):
+    p = subprocess.Popen(['git-receive-pack', '--stateless-rpc', os.path.join('storage', name)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    data_in = request.data
+    print(data_in.decode('utf-8'))
+
+    pack_file = data_in[data_in.index(bytes('PACK', encoding='utf-8')):]
+
+    print(pack_file)
+    objects = PackStreamReader(StringIO(pack_file).read)
+    for obj in objects.read_objects():
+        if obj.obj_type_num == 1:
+            print(obj)
+    p.stdin.write(data_in)
+    data_out = p.stdout.flush()
+    print('hey')
+    res = make_response(data_out)
+    res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
+    res.headers['Pragma'] = 'no-cache'
+    res.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate'
+    res.headers['Content-Type'] = 'application/x-git-receive-pack-result'
+    p.wait()
+    return res
+
+@app.route('/gitreps/<string:name>/git-upload-pack', methods=['POST'])
+@gitauth.login_required
+def git_upload_pack(name):
+    p = subprocess.Popen(['git-upload-pack', '--stateless-rpc', os.path.join('storage', name)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p.stdin.write(request.data)
+    data = p.stdout.read()
+    res = make_response(data)
+    res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
+    res.headers['Pragma'] = 'no-cache'
+    res.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate'
+    res.headers['Content-Type'] = 'application/x-git-upload-pack-result'
+    p.wait()
+    return res
+
+
 
 @app.route('/docs/why_registration')
 def why_registration():
