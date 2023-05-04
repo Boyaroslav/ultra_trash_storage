@@ -701,7 +701,7 @@ def gen_get_reps(name):
     return a
 
 gitauth = HTTPBasicAuth()
-
+#  dont worry, the password is fake here ;)
 git_allowed = {
     'Boyaroslav': 'boyara867'
 }
@@ -778,12 +778,29 @@ def git_upload_pack(name):
     p.wait()
     return res
 
+
+from io import BytesIO
+@app.route('/archive/<string:name>')
+def make_zip(name):
+    path = os.path.join(DIR, 'storage', name)
+    outputpath = os.path.join(DIR, 'cache', name)
+    os.system(f'bash archive.bash {name}')
+    o = open(f'cache/{name}.zip', 'rb').read()
+    os.system(f"rm -rf cache/{name}.zip")
+    r = make_response(BytesIO(o))
+    r.headers['Content-Type'] = 'application/zip'
+
+
+    return r
+
 @app.route('/gitreps/<string:name>/look')
 def gitlook(name):
+
     language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
-    return render_template('git_files.html', files=os.popen(f'bash view.bash {name}').read().split(), name=name, translations=translations, lang=i)
-
+    if os.path.exists(f'storage/{name}'):
+        return render_template('git_files.html', files=os.popen(f'bash view.bash {name}').read().split(), name=name, translations=translations, lang=i)
+    return render_template('git_files.html', files=[], name=name, translations=translations, lang=i)
 
 
 @app.route('/docs/why_registration')
