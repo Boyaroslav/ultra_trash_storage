@@ -24,6 +24,8 @@ from flask_httpauth import HTTPBasicAuth
 
 from languages import translations
 
+DIR = '/home/boyaroslav/ultra_trash_storage'
+
 db_session.global_init("db/blogs.db")
 
 defaultimg = open("static/img/default.png", 'rb').read()
@@ -684,7 +686,7 @@ def draw_reps():
     i = ['ru', 'en', 'sp'].index(language)
     path = request.args.get('path', default='')
 
-    r = get_reps()
+    r = get_reps(os.path.join(DIR, 'storage'))
 
     return render_template('gitreps.html', reps=r, translations=translations, lang=i, path=path, ptype='d')
 
@@ -716,7 +718,7 @@ def inforefs(name):
     service = request.args.get('service')
     if service[:4] != 'git-': 
         abort(500)
-    print(os.path.join('gitreps', name))
+    print(os.path.join(DIR, 'storage', name))
     p = subprocess.Popen([service, '--stateless-rpc', '--advertise-refs', os.path.join('storage', name)], stdout=subprocess.PIPE)
     packet = '# service=%s\n' % service
     length = len(packet) + 4
@@ -740,20 +742,11 @@ def inforefs(name):
 @app.route('/gitreps/<string:name>/git-receive-pack', methods=['POST'])
 @gitauth.login_required
 def git_receive(name):
-    p = subprocess.Popen(['git-receive-pack', '--stateless-rpc', os.path.join('storage', name)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    data_in = request.data
-    print(data_in.decode('utf-8'))
-
-    pack_file = data_in[data_in.index(bytes('PACK', encoding='utf-8')):]
-
-    print(pack_file)
-    objects = PackStreamReader(StringIO(pack_file).read)
-    for obj in objects.read_objects():
-        if obj.obj_type_num == 1:
-            print(obj)
-    p.stdin.write(data_in)
-    data_out = p.stdout.flush()
-    print('hey')
+    repoPath = os.path.join(DIR, 'storage', name)
+    p = subprocess.Popen(['git-receive-pack', '--stateless-rpc', repoPath], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p.stdin.write(request.data)
+    p.stdin.flush()
+    data_out = p.stdout.read()
     res = make_response(data_out)
     res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
     res.headers['Pragma'] = 'no-cache'
@@ -762,11 +755,20 @@ def git_receive(name):
     p.wait()
     return res
 
+
 @app.route('/gitreps/<string:name>/git-upload-pack', methods=['POST'])
 @gitauth.login_required
 def git_upload_pack(name):
-    p = subprocess.Popen(['git-upload-pack', '--stateless-rpc', os.path.join('storage', name)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    p.stdin.write(request.data)
+    repoPath = os.path.join(DIR, 'storage', name)
+    if 'Content-Encoding' in request.headers:
+        # gzip
+        app.logger.debug('Content-Encoding: ' + request.headers['Content-Encoding'])
+        reqData = gzip.decompress(request.data)
+    else:
+        reqData = request.data
+    p = subprocess.Popen(['git-upload-pack', '--stateless-rpc', repoPath], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p.stdin.write(reqData)
+    p.stdin.flush()
     data = p.stdout.read()
     res = make_response(data)
     res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
@@ -775,6 +777,12 @@ def git_upload_pack(name):
     res.headers['Content-Type'] = 'application/x-git-upload-pack-result'
     p.wait()
     return res
+
+@app.route('/gitreps/<string:name>/look')
+def gitlook(name):
+    language = request.cookies.get("language", 'ru')
+    i = ['ru', 'en', 'sp'].index(language)
+    return render_template('git_files.html', files=os.popen(f'bash view.bash {name}').read().split(), name=name, translations=translations, lang=i)
 
 
 
