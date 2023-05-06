@@ -1,0 +1,77 @@
+@font-face {
+    font-family: EuroFont;
+    src: url('Tourney-Regular.ttf') ;
+
+}
+
+h1 {
+    font-family: EuroFont;
+}
+
+body{
+    background-image: url('/show_image/eurokostil');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+}
+
+
+.text1{
+
+    padding: 10px;
+    border:10px solid transparent;
+
+    border-image: url('/show_image/border_texture') 5% round;
+    background: rgb(109, 108, 109);
+    
+
+
+
+    font-family: monospace;
+
+
+    margin-left: 5%;
+    float: left;
+    vertical-align: bottom;
+    clear: both;
+    margin-bottom: 10px;
+    min-width: 40%;
+    box-shadow: 2px 2px 2px, 0.2em 0 .2em black;
+
+
+}
+audio, audio-container, audio-player{
+    background: linear-gradient( rgba(70,70,70,1) 0%, rgba(255,255,255,1) 100%);
+    border: 15px black;
+
+    border-radius: 10px;
+    min-width: 400px;
+}
+
+.final{
+    float: left;
+    display: block;
+    min-width: 40%;
+    margin-left: 5%;
+    overflow-x: auto;
+    overflow-y: hidden;
+   
+    clear: both;
+    margin-bottom: 10px;
+    text-align: center;
+    align-items: center;
+
+}
+
+
+a{
+    font-family: monospace;
+    background: linear-gradient( rgb(124, 124, 124) 0%, rgb(95, 94, 94) 100%);
+    border: 5px black;
+    padding: 5px;
+
+    border-radius: 5px;
+    color: black;
+}

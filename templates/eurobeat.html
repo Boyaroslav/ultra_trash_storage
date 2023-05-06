@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='euro.css') }}">
+</head>
+<body>
+
+    {% block content %}
+    <div class="notaccountblock">
+        <a href="/" class="button">{{translations['на главную'][lang]}}</a>
+    </div>
+
+    <div class="text1">
+
+      <figure>
+        <p>привет диня</p>
+        <audio
+            controls
+            src="/play_music/3">
+        </audio>
+        <a href="/play_music/3">
+            Download audio
+        </a>
+    </figure>
+
+    <figure>
+        <audio
+            controls
+            src="/play_music/3">
+        </audio>
+        <a href="/play_music/3">
+            Download audio
+        </a>
+    </figure>
+
+
+    </div>
+
+    <div class="final">
+        <a class="button" href="">{{translations['назад'][lang]}}</a>
+        <img src="/show_image/car" width="200">
+        <a class="button" href=''>{{translations['вперед'][lang]}}</a>
+
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>

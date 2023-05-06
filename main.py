@@ -180,6 +180,29 @@ def show_image(id):
     ret.headers.set('Content-Type', 'image/png')
     return ret
 
+euroimg = open("static/img/euro.png", 'rb').read()
+bordtex = open("static/img/border.png", 'rb').read()
+cartx = open("static/img/car.png", 'rb').read()
+
+
+@app.route("/show_image/eurokostil")
+def show_image_eurobeat():
+    ret = make_response(euroimg)
+    ret.headers.set('Content-Type', 'image/png')
+    return ret
+
+@app.route('/show_image/border_texture')
+def show_border():
+    ret = make_response(bordtex)
+    ret.headers.set('Content-Type', 'image/png')
+    return ret
+
+@app.route('/show_image/car')
+def show_button():
+    ret = make_response(cartx)
+    ret.headers.set('Content-Type', 'image/png')
+    return ret
+
 @app.route('/show_svgs/<int:index>')
 def show_svgs(index):
     ret = make_response(link_images[index])
@@ -808,6 +831,12 @@ def why_registration():
     language = request.cookies.get("language", 'ru')
     i = ['ru', 'en', 'sp'].index(language)
     return render_template('why_registration.html', translations=translations, lang=i)
+
+@app.route('/music/eurobeat')
+def euatobeat():
+    language = request.cookies.get("language", 'ru')
+    i = ['ru', 'en', 'sp'].index(language)
+    return render_template('eurobeat.html', translations=translations, lang=i)
 
 
 if __name__ == '__main__':
