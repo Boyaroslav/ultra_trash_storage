@@ -762,11 +762,6 @@ def gen_get_reps(name):
     return a
 
 gitauth = HTTPBasicAuth()
-#  dont worry, the password is fake here ;)
-git_allowed = {
-    'Boyaroslav': 'boyara867_ilovebulochka_Unreal.2007'
-}
-
 @gitauth.verify_password
 def verify_password(username, password):
     if username and password:
