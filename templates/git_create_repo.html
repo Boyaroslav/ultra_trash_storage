@@ -10,18 +10,18 @@
 
 
         <div class="notaccountblock">
-            <a href="/jokes" class="button">назад</a> <br>
-            <a href="/" class="button">на главную</a>
+            <a href="/gitreps" class="button">{{translations['назад'][lang]}}</a> <br>
+            <a href="/" class="button">{{translations['на главную'][lang]}}</a>
         </div>
         <div class="text1">
             <form action="" method="post">
                 {{ form.hidden_tag() }}
-                <p>{{form.name.label}}</p> <br>
-                {{form.name}}
+                <p>name</p> <br>
+                {{form.about}}
                 <br>
-                <p>{{form.author.label}}</p>
+                <p>describtion</p>
                 <br>
-                {{form.author}}
+                {{form.text}}
                 <br>
                 <p>{{form.submit}}</p>
 

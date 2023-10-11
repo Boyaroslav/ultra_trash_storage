@@ -1,9 +1,9 @@
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 {% block content %}
     <h1>Авторизация</h1>
-   
+
     <form action="" method="post">
 
         {{ form.hidden_tag() }}

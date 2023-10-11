@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src=
+"https://code.jquery.com/jquery-3.5.1.min.js">
+</script>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
+        <style>
+            #snake_box{
+                display: none;
+                opacity: 0;
+                position: sticky;
+                margin: 0 auto;
+                left: 40%;
+                top: 20%;
+
+
+            }
+            canvas{
+                border-radius: 11px;
+                position: sticky;
+                left: 40%;
+                top: 20%;
+
+            }
+            #buttons{
+                display: none;
+                opacity: 0;
+                height: 30%;
+                position: sticky;
+                text-align: center;
+                position: sticky;
+                top: 40%;
+
+            }
+            button{
+                color: #fff;
+                opacity: 0.5;
+                min-width: 150px;
+                margin-left: 20px;
+            }
+            table{
+                min-width: 100%;
+                border: none;
+            }
+            td{border:none; margin:0 auto;}
+        </style>
+        <script>
+            $(document).ready(function() {
+                var game = 0;
+                var sx = 20;
+                var sy = 20;
+                var l;
+                var isd;
+                var score = 0;
+                var snake = [];
+                snake_length = 1;
+                var move = 'r';
+                var applex = -1;
+                var appley = -1;
+                var stable_move = move;
+
+                var canvas = document.getElementById("canvas");
+                var scoret = document.getElementById("score");
+                var ctx = canvas.getContext("2d");
+                var timer = 0;
+                ctx.fillStyle = "green";
+                var xStart, yStart;
+
+                document.addEventListener('touchstart', function(e) {
+                  xStart = e.touches[0].clientX;
+                  yStart = e.touches[0].clientY;
+                });
+
+                document.addEventListener('touchmove', function(e) {
+                  var xEnd = e.touches[0].clientX;
+                  var yEnd = e.touches[0].clientY;
+
+                  var deltaX = xEnd - xStart;
+                  var deltaY = yEnd - yStart;
+
+                  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+                      // свайп вправо
+                      if(stable_move != 'l'){move = 'r';}
+                    } else {
+                      // свайп влево
+                      if(stable_move != 'r'){move = 'l';}
+                    }
+                  } else {
+                    if (deltaY > 0) {
+                      // свайп вниз
+                      if(stable_move != 'u'){move = 'd';}
+                    } else {
+                      // свайп вверх
+                      if(stable_move != 'd'){move = 'u';}
+                    }
+                  }
+                });
+                function logic(){
+                    if (game == 1){
+                    for(let i=snake_length-1; i>0; i--){
+                        snake[i][0] = snake[i-1][0];
+                        snake[i][1] = snake[i-1][1];
+
+                    }
+                    if (move == 'r'){
+                    snake[0][0] += 1;}
+                    if(move == 'l'){
+                        snake[0][0] -= 1;
+                    }
+                    if (move == 'u'){
+                        snake[0][1] -= 1;
+                    }
+                    if (move == 'd'){
+                        snake[0][1] += 1;
+                    }
+                    stable_move = move;
+
+
+                    if ((snake[0][0] == applex) && (snake[0][1] == appley)){
+                        score++;
+                        console.log("score++");
+                        scoret.innerText = score;
+                        isd = 1;
+                        snake.push([snake[snake_length-1][0], snake[snake_length-1][1]]);
+                        snake_length++;
+                        while (isd){
+                            isd = 0;
+                            applex = Math.floor(Math.random() * (sx - 1)) + 1;
+                            appley = Math.floor(Math.random() * (sy - 1)) + 1;
+                            for(let i = 0; i < snake_length; i++){
+                                if (applex == snake[i][0] && appley == snake[i][1]){isd = 1;}
+                            }
+                        }
+                    }
+
+                    if (snake[0][0] < 1 || snake[0][0] > sx || snake[0][1] < 1 || snake[0][1] > sy){
+                        reset_game();
+
+                    }
+
+
+                }
+                }
+                function reset_game(){
+                    $.ajax({
+                      url: '/snake_commit', // Flask route to process the value
+                      method: 'post', // Or 'GET' depending on your requirements
+                      dataType: 'text',
+                      data: '' + score,
+                      headers: {
+                        'Access-Control-Allow-Origin' : '*'
+                      },
+                      success: function(response) {
+                        console.log(response); // The Flask response
+                      },
+                    });
+                    $('#start_game').css('display', 'block');
+                    game=0;
+                        score = 0;
+                        l = snake.length;
+
+                        while(l > 0){
+                            snake.pop();
+                            l--;
+                        }
+                        applex = -1;
+                        appley = -1;
+                        snake_length = 1;
+
+                        move = 'r';
+                }
+
+                function draw_() {
+
+
+                    if (game == 1){
+                        logic();
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = "green";
+                        ctx.fillRect(0, 0, 20, 440);
+                        ctx.fillRect(420, 0, 20, 440);
+                        ctx.fillRect(0, 0, 440, 20);
+                        ctx.fillRect(0, 420, 420, 20);
+                        ctx.fillStyle = "red";
+                        if (snake_length > 0 && applex > 0){
+                        ctx.fillRect(applex * 20, appley * 20, 20, 20);
+                        ctx.fillStyle = "blue";
+
+                        for (let i = 0; i < snake_length; i++){
+                            ctx.fillRect(snake[i][0] * 20, snake[i][1] * 20, 20, 20);
+                            if (i > 1 && snake[i][0] == snake[0][0] && snake[i][1] == snake[0][1]){
+                                reset_game();
+                            }
+                        }}
+
+
+                    }
+                    else{
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(0, 0, 440, 440)
+                    }
+                    timer = setTimeout(draw_, 80);
+
+                }
+                $("#sleft").click(function(data){data.preventDefault(); data.stopImmediatePropagation();if(stable_move != 'r'){move = 'l';}});
+                $("#sright").click(function(data){data.preventDefault(); data.stopImmediatePropagation(); if(stable_move != 'l'){move = 'r';}});
+                $("#sup").click(function(data){data.preventDefault(); data.stopImmediatePropagation(); if(stable_move != 'd'){move = 'u';}});
+                $("#sdown").click(function(data){data.preventDefault(); data.stopImmediatePropagation(); if(stable_move != 'u'){move = 'd';}});
+
+                $("#show_buttons").click(function(data){
+                    $('#buttons')
+                    .animate({opacity: 0.7}, 490,
+                        function(){
+                        }
+                    ).css('display', 'block');
+                });
+                $("#close").click(function(event){
+                    reset_game();
+                    $('#snake_box')
+                    .animate({opacity: 0}, 490,
+                        function(){
+                        }
+                    ).css('display', 'none');
+
+                });
+
+                $("#start_game").click(function(event){
+                    $(this).css('display', 'none');
+
+
+                    $('#snake_box')
+                    .css('display', 'block')
+                    .animate({opacity: 1}, 490,
+                        function(){
+                        }
+                    );
+                    game = 1;
+                    score = 0;
+                    scoret.innerText = score;
+                    snake.push([2, 2]);
+                    isd = 1;
+                    while (isd){
+                            score = 0;
+                            applex = Math.floor(Math.random() * (sx - 1)) + 1;
+                            appley = Math.floor(Math.random() * (sy - 1)) + 1;
+                            isd = 0;
+
+                            for(let i = 0; i < snake_length; i++){
+                                if (applex == snake[i][0] && appley == snake[i][1]){isd = 1;}
+                            }
+                        }
+                    if (timer == 0){
+                        timer = setTimeout(draw_, 80);
+                    }
+
+                });
+                $(document).keydown(function(e){
+                    if (e.keyCode == 38 && stable_move != 'd'){move = 'u';}
+                    if (e.keyCode == 37 && stable_move != 'r'){move = 'l';}
+                    if (e.keyCode == 40 && stable_move != 'u'){move = 'd';}
+                    if (e.keyCode == 39 && stable_move != 'l'){move = 'r';}
+                    if (e.key == 'Escape'){reset_game();
+                        $('#snake_box')
+                    .animate({opacity: 0}, 490,
+                        function(){
+                        }
+                    ).css('display', 'none');
+                    }
+
+                });
+
+
+            });
+        </script>
+
+    </head>
+
+
+    <body>
+        {% block content %}
+        <div class="notaccountblock">
+            <a href="/" class="button">{{translations['на главную'][lang]}}</a>
+            {% for j in table %}
+            <p>{{j.user_name}} - {{j.score}}</p>
+            {%endfor%}
+        </div>
+        {% endblock %}
+        <p><a href="#" id="start_game" style="left: 40%; top: 10%; position: sticky;">Начать</a></p>
+        </div><div id="snake_box">
+        <a href="#" id="close"><p  style="left: 70%; top: 10%; position: sticky;">x</p></a>
+        <canvas id="canvas" width="440px" height="440px"  style="background-color: rgb(0, 0, 0);"></canvas>
+        <p id="score">0</p>
+        <br>
+        </div>
+        <table id="buttons" width="100%">
+                <tr width="100%" style="text-align:center; width:100%;">
+                    <td><button data-role="button" id='sleft' style="font-size: 100px; background-color: #000; border-radius: 10px; text-decoration: none;position: sticky;text-align:center; height: 100%; width:100%"> ← </button></th>
+                    <td><button data-role="button" id='sright' style="font-size: 100px; background-color: #000; border-radius: 10px; text-decoration: none;position: sticky;text-align:center; height: 100%; width:100%"> → </button></th>
+                    <td><button data-role="button" id='sup' style="font-size: 100px; background-color: #000; border-radius: 10px; text-decoration: none;position: sticky;text-align:center; height: 100%; width:100%">  ↑  </button></th>
+                    <td><button data-role="button" id='sdown' style="font-size: 100px; background-color: #000; border-radius: 10px; text-decoration: none;position: sticky;text-align:center; height: 100%; width:100%">  ↓  </button></th>
+                </tr>
+            </table>
+        <p>press ESC to close</p>
+        <a href='#' id='show_buttons'><p>view buttons</p></a>
+        </div>
+
+    </body>
+</html>

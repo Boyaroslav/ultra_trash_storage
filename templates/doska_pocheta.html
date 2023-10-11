@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 <body>
 
@@ -23,7 +23,7 @@
                 </svg></p>
                 {%endif%}
             </div>
-            
+
 
 
         {% endfor %}
@@ -32,7 +32,7 @@
         <p><a href="/our_dear_users{{admins}}?page={{page - 1}}" class="button">назад</a></p>
         {%endif%}
         {%if page < page_count - 1 %}
-    
+
         <p><a href="/our_dear_users{{admins}}?page={{page + 1}}" class="button">далее</a></p>
         {%endif%}
 

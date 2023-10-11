@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
+</head>
+<body>
+
+    {% block content %}
+    <div class="notaccountblock">
+        <a href="/" class="button">{{translations['на главную'][lang]}}</a>
+        <a href="/gitreps/{{name}}">{{translations['назад'][lang]}}</a>
+    </div>
+    <div class="text1">
+      <h1>{{name}}</h1>
+    </div>
+    <div class="text1">
+
+      <span style="white-space: pre-line; tab-size: 4">{{text}}</span>
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>

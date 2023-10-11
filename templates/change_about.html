@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 <body>
     <form action="" method="post" enctype="multipart/form-data">
@@ -10,7 +10,7 @@
         <p>{{form.about.label}}</p>
         <br>
         {{form.about}}
-    
+
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
     <p><a href="{{exception}}" class="button">не хочу чот</a></p>

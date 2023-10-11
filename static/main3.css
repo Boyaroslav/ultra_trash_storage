@@ -1,11 +1,10 @@
 body {
-	background: linear-gradient(-45deg, #290f25, #530724, #6b2040, #300b27);
+	background: linear-gradient(-45deg, #d99fd1, #e86597, #f086b4, #a5799a);
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
 	height: 100vh;
   background-image: "images/wallpaper.jpg";
   font-family: monospace;
-  color: #fff;
 
 }
 
@@ -22,6 +21,7 @@ body {
 
 
 }
+
 
 .switch-btn {
   display: inline-block;
@@ -50,10 +50,11 @@ body {
   z-index: 1;
 }
 .switch-on {
-  background: rgb(58, 51, 55);
+  background: rgb(10, 10, 10);
 }
 .switch-on::after {
   left: 37px;
+  background:  #d99fd1;
 }
 
 .header1{
@@ -115,31 +116,53 @@ form {
 }
 
 .accountblock{
-  border: 4px double black;
-  background: rgb(66, 58, 63); /* Цвет фона */
+  border-radius: 10px;
+
+  background: rgb(40, 28, 34);/* Цвет фона */
   padding: 10px;
   position: sticky;
 
   top: 0px;
   font-size: 30px;
   white-space: normal;
+    border-color: #fdcfe7;
+  border-style:solid;
+  border-width: 4px;
 
 }
 .notaccountblock{
-  border: 4px double black;
-  background: rgb(66, 58, 63); /* Цвет фона */
-  padding: 10px;
+  border-radius: 10px;
+  padding: 20px;
+  position: sticky;
+      border-color: #fdcfe7;
+  border-style:solid;
+  border-width: 4px;
+
+
+  background: rgb(40, 28, 34); /* Цвет фона */
+
   position: sticky;
 
+  margin-top: 0%;
   top: 0px;
+  min-width: 99%;
+  align-self: center;
   font-size: 30px;
-  white-space: normal;
+  /*white-space: normal; */
 
+}
+
+.notaccountblock br {
+  display: none;
+}
+.notaccountblock p{
+  display:inline;
+  color: #9f3361;
 }
 
 .music {
   border: 4px double black;
-  background: rgb(66, 58, 63); /* Цвет фона */
+  background: rgb(29, 25, 27); /* Цвет фона */
   padding: 10px;
   position: center;
   border: 4px double black;
@@ -152,6 +175,13 @@ form {
   left: 400px;
   text-align: center;
   font-size: 30px;
+   border-color: #fdcfe7;
+  border-style:solid;
+  border-width: 4px;
+
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 40px;
 }
 
 .adminfeatures {
@@ -179,29 +209,34 @@ form {
 
 
 .text1{
+  border-radius: 10px;
+  padding: 20px;
+    background: rgb(40, 28, 34); /* Цвет фона */
 
-    border: 4px double black;
-    background: rgb(66, 58, 63); /* Цвет фона */
-    padding: 10px;
     position: center;
-    border: 4px double black;
+
 
 
     align-items: center;
     left: 20px;
 
     margin: 0 auto;
+    margin-top: 10px;
     left: 400px;
 
 }
 
 .joke{
+  border-color: #fdcfe7;
+  border-style:solid;
+  border-width: 4px;
 
-    border: 4px double black;
-    background: rgb(66, 58, 63); /* Цвет фона */
+  border-radius: 10px;
+  padding: 20px;
+
+    background: rgb(40, 28, 34); /* Цвет фона */
     padding: 10px;
     position: center;
-    border: 4px double black;
 
 
     align-items: center;
@@ -209,11 +244,14 @@ form {
 
 
     margin: 0 auto;
+    margin-top: 40px;
     left: 400px;
-    color: #fff;
     text-align: center;
 
+
 }
+
+
 .accordion-body{
   background: rgb(66, 58, 63);
   font-family: monospace;
@@ -274,7 +312,6 @@ form {
     border-radius: 10px;
 
   }
-p{color: #fff;}
 
   th, td {
     border: 3px solid rgb(95, 95, 95);
@@ -303,7 +340,7 @@ p{color: #fff;}
       height: auto;
   }
   .joke img {
-    width: 80%;
+    width: 50%;
     height: auto;
   }
   input {
@@ -345,7 +382,6 @@ textarea{
   .text1{
 
     width: 70%;
-    color: #fff;
 
     font-size: 20px;
 
@@ -353,7 +389,6 @@ textarea{
 .joke{
 
   width: 50%;
-  color: #fff
   font-size: 20px;
 
 }
@@ -364,18 +399,5 @@ textarea{
 }
 
 @media (max-width: 1000px){
-  .button {
-    display: block;
-    width: 300px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 10px;
-    text-align: center;
-    position: sticky;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    line-height: 25px;
-    font-size: 20px;
-}
+
 }

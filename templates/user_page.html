@@ -1,16 +1,29 @@
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 <div class="notaccountblock">
     <a href="/" class="button">{{translations['на главную'][lang]}}</a> <br>
     <a href="/our_dear_users" class="button">{{translations['на всех'][lang]}}</a>
 </div>
 <div class="text1">
+<div style="  display: flex; align-items: center;">
 {%if img == None%}
 <img src="/static/img/default.png">
 {%else%}
 <img src="/show_image/{{user.id}}">
 {% endif %}
+    <dev class="joke">
+    <h3 position="right">{{translations['пошут'][lang]}}</h3>
+    <br>
+    <h1 position="right"><a href="/jokes/{{user.name}}">{{user.jokes_count}}</a></h1>
+    <br>
+    <h3 position="right">{{translations['помуз'][lang]}}</h3>
+    <h1 position="right"><a href="/music/{{user.name}}">{{user.music_count}}</a></h1>
+    <br>
+    <h3 position="right">{{translations['посер'][lang]}}</h3>
+    <h1 position="right"><a href="/servers/{{user.name}}">{{user.servers_count}}</a></h1>
+    </dev>
+    </div>
 {%if current_user.admin == 1 %}
 <div class="adminfeatures">
 
@@ -40,23 +53,18 @@
 {%endfor%}
 </div>
 {%if user.id == current_user.id%}
-<dev class="menu"><p><a href="/upload_photo" class="button">{{translations['смав'][lang]}}</a></p></dev>
-<dev class="menu"><p><a href="/change_about" class="button">{{translations['смоп'][lang]}}</a></p></dev>
-<dev class="menu"><p><a href="/add_link" class="button">{{translations['допсс'][lang]}}</a></p></dev>
-<dev class="menu"><p><a href="/administrate/delete_account._./{{user.id}}" class="button">{{translations['удакк'][lang]}}</a></p></dev>
-{%endif%}
-
-<h1>{{translations['встречайте'][lang]}}{{user.name}}</h1>
-<p>{{translations['снами'][lang]}}{{dated}} {{translations['дней'][lang]}}, {{dateh}} {{translations['часов и'][lang]}} {{datem}} {{translations['минутки'][lang]}}</p>
-<p>{{user.about}}</p>
+<br>
+<div class="user_menu">
+<div class="menu"><p><a href="/upload_photo" class="button">{{translations['смав'][lang]}}</a></p></div>
+<div class="menu"><p><a href="/change_about" class="button">{{translations['смоп'][lang]}}</a></p></div>
+<div class="menu"><p><a href="/add_link" class="button">{{translations['допсс'][lang]}}</a></p></div>
+<div class="menu"><p><a href="/administrate/delete_account._./{{user.id}}" class="button">{{translations['удакк'][lang]}}</a></p></div>
 </div>
-<div class="text1">
-    <h3>{{translations['пошут'][lang]}}</h3>
-    <h1><a href="/jokes/{{user.name}}">{{user.jokes_count}}</a></h1>
-    <br>
-    <h3>{{translations['помуз'][lang]}}</h3>
-    <h1><a href="/music/{{user.name}}">{{user.music_count}}</a></h1>
-    <br>
-    <h3>{{translations['посер'][lang]}}</h3>
-    <h1><a href="/servers/{{user.name}}">{{user.servers_count}}</a></h1>
+{%endif%}
+<div class="user_name">
+
+<h1 position="left" style="text-align: left; margin-left: 1%">{{translations['встречайте'][lang]}}{{user.name}}</h1>
+<p position="left" style="text-align: left; margin-left: 1%">{{translations['снами'][lang]}}{{dated}} {{translations['дней'][lang]}}, {{dateh}} {{translations['часов и'][lang]}} {{datem}} {{translations['минутки'][lang]}}</p>
+<p position="left" style="text-align: left; margin-left: 1%">{{user.about}}</p>
+</div>
 </div>

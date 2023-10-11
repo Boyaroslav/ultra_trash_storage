@@ -1,0 +1,27 @@
+
+{% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main2.css') }}">
+    <meta charset="utf-8">
+</head>
+<h1>Регистрация</h1>
+
+<form action="" method="post">
+
+    {{ form.hidden_tag() }}
+
+        <p>{{ form.terminal.label }}<br>
+        {{ form.terminal(class="form-control") }}<br>
+
+        </p>
+        <p>
+        {{ form.inputfield.label }}<br>
+        {{ form.inputfield(class="form-control") }}<br>
+
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+
+    </form>
+<p>Пишите ввод в окошко и нажмите submit</p>
+{% endblock %}

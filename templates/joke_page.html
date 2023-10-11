@@ -3,12 +3,28 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
+    {% for j in jokes %}
+    <meta property="og:title" content="{{j.text}}"/>
+    <meta property="og:description" content="{{j.user_name}} {{j.about}}"/>
+
+    {%if j.image != None %}
+    <meta property="og:image:url" content="/show_image/jokes/{{j.id}}"/>
+    <meta property="og:image" content="/show_image/jokes/{{j.id}}"/>
+    <meta property="og:image:width" content="300" />
+    <meta property="og:image:height" content="300" />
+    <meta property="og:image:secure_url" content="/show_image/jokes/{{j.id}}"/>
+    {%endif%}
+    <meta property="og:url" content="http://boyaroslav.pythonanywhere.com/jokes/{{j.id}}"/>
+    {%endfor%}
 </head>
 <body>
+    <h1>Page of one joke...</h1>
+    <h1>Театр одного актёра</h1>
 
     {% block content %}
     <div class="notaccountblock">
         <a href="/" class="button">{{translations['на главную'][lang]}}</a>
+        <a href="/jokes">{{translations['назад'][lang]}}</a>
     </div>
     {% if current_user.is_authenticated %}
         {%if current_user.can_joke == 1%}
@@ -28,7 +44,6 @@
             {%if    j.image != None %}
             <img width="100%" style="padding 0" src="/show_image/jokes/{{j.id}}">
             {%endif%}
-            <p><a href="/jokes/{{j.id}}">подробнее</a></p>
             {%if current_user.admin == 1%}
             <a href="/jokes/delete/{{j.id}}"><p>Удалить запись (ты админ)</p></a>
             {%endif%}

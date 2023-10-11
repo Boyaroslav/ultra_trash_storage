@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 <body>
 
@@ -13,13 +13,28 @@
     </div>
     <div class="text1">
       <h1>{{name}}</h1>
+      {%if folder != None%}
+      <h2>{{folder}}</h2>
+      {%endif%}
     </div>
     <div class="text1">
       {%for i in files%}
-      <p>{{i}}</p> <br>
+        {%if folder != None%}
+      <a href="/gitreps/{{name}}/{{folder + '/' + i}}/look"><p>{{i}}</p><a> <br>
+      {%else%}
+      <a href="/gitreps/{{name}}/{{i}}/look"><p>{{i}}</p><a> <br>
+      {%endif%}
       {%endfor%}
     </div>
+    <div class="text1">
+        {%if text != ''%}
+        <div class="joke">
+        {{text|safe}}
+        </div>
+        {%endif%}
+        <br>
     <a class="button" href="/archive/{{name}}">Download ZIP</a>
+    </div>
 
 
     {% endblock %}

@@ -45,7 +45,9 @@ translations = {
     'сочинил': ['а сочинил', 'and composed', 'y compuesto'],
     'отказ': ['не хочу чот', 'I dont want', ''],
     'вверх': ['вверх', 'go up', ''],
-    'гит': ['гит хостинг', 'git hosting', '']
+    'гит': ['гит хостинг', 'git hosting', 'git hosting'],
+    'змейка': ['змейка', 'snake', 'snake'],
+    'создать репозиторий': ['создать репозиторий', 'create repository', 'create repository']
 
 
 

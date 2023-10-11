@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename=cs) }}">
 </head>
 <body>
 
@@ -11,12 +11,17 @@
         <a href="/" class="button">{{translations['на главную'][lang]}}</a>
     </div>
     {% if current_user.is_authenticated %}
+    <div class="accountblock">
+        <a href="/gitreps/create" class="button">{{translations['создать репозиторий'][lang]}}</a>
+    </div>
 
     {%endif%}
     {%if ptype == 'd'%}
     {% for j in reps %}
-        <div class="joke">
-            <a href="/gitreps/{{j}}/look">{{j}}</a>
+        <div class="text1">
+            <p style="white-space: nowrap;">{{j[0]}}/ <a href="/gitreps/{{j[1]}}" style="font-size: 20px;  text-decoration: none;white-space: nowrap;">{{j[1]}}</a></p>
+
+            <p style="font-size: 15px">{{j[2]}}</p>
         </div>
     {% endfor %}
     {%endif%}
